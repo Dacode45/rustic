@@ -1,0 +1,26 @@
+[package]
+name = "rustic"
+version = "0.1.0"
+authors = ["David Ayeke"]
+
+[dependencies]
+derivative = "1.0.0"
+ggez = "0.4"
+ggez-goodies = { git = "https://github.com/ggez/ggez-goodies", branch = "master" }
+specs = "0.10"
+specs-derive = "0.1"
+warmy = "0.7"
+
+# Utility stuff
+log = "0.4"
+fern = {version = "0.5", features = ["colored"] }
+chrono = "0.4"
+failure = "0.1"
+
+[lib]
+name = "rustic"
+path = "src/lib.rs"
+
+[[bin]]
+name = "mybin"
+path = "src/bin.rs"

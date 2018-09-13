@@ -1,0 +1,38 @@
+[2018-09-12 23:12:17][[95mDEBUG[0m][ggez::graphics::context] Window created.
+[2018-09-12 23:12:17][[95mDEBUG[0m][ggez::graphics::context]   Asked for     OpenGL 3.2 Core, vsync: true
+[2018-09-12 23:12:17][[95mDEBUG[0m][ggez::graphics::context]   Actually got: OpenGL 3.2 Core, vsync: VSync
+[2018-09-12 23:12:17][[95mDEBUG[0m][ggez::graphics::context]   Window size: 800x600, drawable size: 1600x1200, DPI: (147.35904, 147.5, 147.0)
+[2018-09-12 23:12:17][[95mDEBUG[0m][ggez::graphics::context]   Driver vendor: Intel Inc., renderer Intel Iris Pro OpenGL Engine, version 4.1, INTEL-10.36.19, shading language 4.10
+[2018-09-12 23:12:17][[33mWARN[0m ][gfx_device_gl::shade] 	Log: WARNING: Could not find fragment shader output 'Target2' to match FragDataBinding request.
+WARNING: Could not find fragment shader output 'Target3' to match FragDataBinding request.
+WARNING: Could not find fragment shader output 'Target1' to match FragDataBinding request.
+
+[2018-09-12 23:12:17][[33mWARN[0m ][gfx_device_gl::shade] 	Log: WARNING: Could not find fragment shader output 'Target2' to match FragDataBinding request.
+WARNING: Could not find fragment shader output 'Target3' to match FragDataBinding request.
+WARNING: Could not find fragment shader output 'Target1' to match FragDataBinding request.
+
+[2018-09-12 23:12:17][[33mWARN[0m ][gfx_device_gl::shade] 	Log: WARNING: Could not find fragment shader output 'Target2' to match FragDataBinding request.
+WARNING: Could not find fragment shader output 'Target3' to match FragDataBinding request.
+WARNING: Could not find fragment shader output 'Target1' to match FragDataBinding request.
+
+[2018-09-12 23:12:17][[33mWARN[0m ][gfx_device_gl::shade] 	Log: WARNING: Could not find fragment shader output 'Target2' to match FragDataBinding request.
+WARNING: Could not find fragment shader output 'Target3' to match FragDataBinding request.
+WARNING: Could not find fragment shader output 'Target1' to match FragDataBinding request.
+
+[2018-09-12 23:12:17][[33mWARN[0m ][gfx_device_gl::shade] 	Log: WARNING: Could not find fragment shader output 'Target2' to match FragDataBinding request.
+WARNING: Could not find fragment shader output 'Target3' to match FragDataBinding request.
+WARNING: Could not find fragment shader output 'Target1' to match FragDataBinding request.
+
+[2018-09-12 23:12:17][[33mWARN[0m ][gfx_device_gl::shade] 	Log: WARNING: Could not find fragment shader output 'Target2' to match FragDataBinding request.
+WARNING: Could not find fragment shader output 'Target3' to match FragDataBinding request.
+WARNING: Could not find fragment shader output 'Target1' to match FragDataBinding request.
+
+[2018-09-12 23:12:17][[33mWARN[0m ][gfx_device_gl::shade] 	Log: WARNING: Could not find fragment shader output 'Target2' to match FragDataBinding request.
+WARNING: Could not find fragment shader output 'Target3' to match FragDataBinding request.
+WARNING: Could not find fragment shader output 'Target1' to match FragDataBinding request.
+
+[2018-09-12 23:12:17][[33mWARN[0m ][gfx_device_gl::shade] 	Log: WARNING: Could not find fragment shader output 'Target2' to match FragDataBinding request.
+WARNING: Could not find fragment shader output 'Target3' to match FragDataBinding request.
+WARNING: Could not find fragment shader output 'Target1' to match FragDataBinding request.
+
+[2018-09-12 23:12:20][[95mDEBUG[0m][ggez::event] quit_event() callback called, quitting...
