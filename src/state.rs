@@ -54,7 +54,7 @@ pub trait State<T> {
     }
 
     /// Executed on every frame immediately, as fast as the engine will allow.
-    fn update(&mut self, dt: f32, _data: StateData<T>) -> Trans<T> {
+    fn update(&mut self, _dt: f32, _data: StateData<T>) -> Trans<T> {
         Trans::None
     }
 
@@ -67,7 +67,7 @@ pub trait State<T> {
 pub struct StateMachine<T> {
     running: bool,
     #[derivative(Debug = "ignore")]
-    state_stack: Vec<Box<State<T>>>,
+    pub state_stack: Vec<Box<State<T>>>,
 }
 
 impl<T> StateMachine<T> {
@@ -111,7 +111,8 @@ impl<T> StateMachine<T> {
         if self.running {
             let mut trans = Trans::None;
             {
-                let mut substack: Vec<&mut Box<State<T>>> = self.state_stack
+                let mut substack: Vec<&mut Box<State<T>>> = self
+                    .state_stack
                     .iter_mut()
                     .rev()
                     .take_while(|state| state.is_blocking())
@@ -147,7 +148,7 @@ impl<T> StateMachine<T> {
 
     /// Performs a state transition, if requested by either update() or
     /// fixed_update().
-    fn transition(&mut self, request: Trans<T>, data: StateData<T>) {
+    pub fn transition(&mut self, request: Trans<T>, data: StateData<T>) {
         if self.running {
             match request {
                 Trans::None => (),

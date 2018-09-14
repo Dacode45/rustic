@@ -5,6 +5,8 @@ use ggez::*;
 
 use std::path;
 
+use rustic::sop::*;
+use rustic::storyboard::*;
 use rustic::*;
 
 fn main() {
@@ -19,12 +21,18 @@ fn main() {
         cb = cb.add_resource_path(s);
     }
 
-    let ctx = &mut cb.build().unwrap();
+    let ctx = cb.build().unwrap();
 
-    let state = &mut game::Game::new(cargo_path, ctx, vec![]);
-    if let Err(e) = event::run(ctx, state) {
-        println!("Error encountered: {}", e);
-    } else {
-        println!("Game exited cleanly.")
+    let state = &mut game::Game::new(
+        cargo_path,
+        ctx,
+        vec![Story::Run(Box::new(WaitState::new(1.0)))],
+    );
+    while !state.should_exit {
+        state.update();
+        state.draw();
+        state.handle_events();
+
+        ggez::timer::yield_now();
     }
 }
