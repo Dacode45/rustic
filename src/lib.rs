@@ -13,6 +13,7 @@ extern crate chrono;
 extern crate failure;
 extern crate fern;
 
+pub mod application;
 pub mod game;
 pub mod input;
 pub mod sop;

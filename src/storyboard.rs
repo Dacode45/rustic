@@ -129,8 +129,8 @@ impl Storyboard {
             .map(|state| state.state_name().to_owned())
             .collect();
 
-        println!("story_names {:?}", story_names);
-        println!("state_names {:?}", state_names);
+        info!("story_names {:?}", story_names);
+        info!("state_names {:?}", state_names);
         // update the stories
         self.stories = Storyboard::update_stories(dt, &mut s_ctx, &mut self.storystack, stories);
     }
