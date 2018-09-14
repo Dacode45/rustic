@@ -18,22 +18,22 @@ where
 }
 
 /// Types of state transitions.
-pub enum Trans<T, D> {
+pub enum Trans<T> {
     /// Continue as normal.
     None,
     /// Remove the active state and resume the next state on the stack or stop
     /// if there are none.
     Pop,
     /// Pause the active state and push a new state onto the stack.
-    Push(Box<State<T, D>>),
+    Push(Box<State<T>>),
     /// Remove the current state on the stack and insert a different one.
-    Switch(Box<State<T, D>>),
+    Switch(Box<State<T>>),
     /// Stop and remove all states and shut down the engine.
     Quit,
 }
 
 /// A trait which defines game states that can be used by the state machine.
-pub trait State<T, D> {
+pub trait State<T> {
     /// Executed when the game state begins.
     fn on_start(&mut self, _data: StateData<T>) {}
 
@@ -54,25 +54,25 @@ pub trait State<T, D> {
     }
 
     /// Executed on every frame immediately, as fast as the engine will allow.
-    fn update(&mut self, dt: f32, _data: StateData<T>) -> Trans<T, D> {
+    fn update(&mut self, dt: f32, _data: StateData<T>) -> Trans<T> {
         Trans::None
     }
 
-    fn draw(&mut self, _data: StateData<T>, _draw: StateData<D>) {}
+    fn draw(&mut self, _data: StateData<T>) {}
 }
 
 /// A simple stack-based state machine (pushdown automaton).
 #[derive(Derivative)]
 #[derivative(Debug)]
-pub struct StateMachine<T, D> {
+pub struct StateMachine<T> {
     running: bool,
     #[derivative(Debug = "ignore")]
-    state_stack: Vec<Box<State<T, D>>>,
+    state_stack: Vec<Box<State<T>>>,
 }
 
-impl<T, D> StateMachine<T, D> {
+impl<T> StateMachine<T> {
     /// Creates a new state machine with the given initial state.
-    pub fn new(initial_state: Box<State<T, D>>) -> StateMachine<T, D> {
+    pub fn new(initial_state: Box<State<T>>) -> StateMachine<T> {
         StateMachine {
             running: false,
             state_stack: vec![initial_state],
@@ -111,7 +111,7 @@ impl<T, D> StateMachine<T, D> {
         if self.running {
             let mut trans = Trans::None;
             {
-                let mut substack: Vec<&mut Box<State<T, D>>> = self.state_stack
+                let mut substack: Vec<&mut Box<State<T>>> = self.state_stack
                     .iter_mut()
                     .rev()
                     .take_while(|state| state.is_blocking())
@@ -133,25 +133,21 @@ impl<T, D> StateMachine<T, D> {
     }
 
     /// Draw the currently active state immediately.
-    pub fn draw(&mut self, dt: f32, data: StateData<T>, _draw: StateData<D>, forward: bool) {
+    pub fn draw(&mut self, data: StateData<T>) {
         let StateData { data } = data;
-        let draw = _draw.data;
 
         if self.running {
             // draw everything
             for state in self.state_stack.iter_mut() {
                 // println!("running: {}", state.state_name());
-                state.draw(StateData { data }, StateData::new(draw));
-                if !forward && state.is_blocking() {
-                    break;
-                }
+                state.draw(StateData { data });
             }
         }
     }
 
     /// Performs a state transition, if requested by either update() or
     /// fixed_update().
-    fn transition(&mut self, request: Trans<T, D>, data: StateData<T>) {
+    fn transition(&mut self, request: Trans<T>, data: StateData<T>) {
         if self.running {
             match request {
                 Trans::None => (),
@@ -164,7 +160,7 @@ impl<T, D> StateMachine<T, D> {
     }
 
     /// Removes the current state on the stack and inserts a different one.
-    fn switch(&mut self, state: Box<State<T, D>>, data: StateData<T>) {
+    fn switch(&mut self, state: Box<State<T>>, data: StateData<T>) {
         if self.running {
             let StateData { data } = data;
             if let Some(mut state) = self.state_stack.pop() {
@@ -178,7 +174,7 @@ impl<T, D> StateMachine<T, D> {
     }
 
     /// Pauses the active state and pushes a new state onto the state stack.
-    fn push(&mut self, next: Box<State<T, D>>, data: StateData<T>) {
+    fn push(&mut self, next: Box<State<T>>, data: StateData<T>) {
         if self.running {
             let StateData { data } = data;
             if let Some(state) = self.state_stack.last_mut() {
@@ -214,7 +210,7 @@ impl<T, D> StateMachine<T, D> {
         }
     }
 
-    pub fn current(&self) -> &Box<State<T, D>> {
+    pub fn current(&self) -> &Box<State<T>> {
         self.state_stack.last().unwrap()
     }
 
@@ -238,8 +234,8 @@ mod tests {
     struct State1(u8);
     struct State2;
 
-    impl State<(), ()> for State1 {
-        fn update(&mut self, _: f32, _: StateData<()>) -> Trans<(), ()> {
+    impl State<()> for State1 {
+        fn update(&mut self, _: f32, _: StateData<()>) -> Trans<()> {
             if self.0 > 0 {
                 self.0 -= 1;
                 Trans::None
@@ -249,15 +245,15 @@ mod tests {
         }
     }
 
-    impl State<(), ()> for State2 {
-        fn update(&mut self, _: f32, _: StateData<()>) -> Trans<(), ()> {
+    impl State<()> for State2 {
+        fn update(&mut self, _: f32, _: StateData<()>) -> Trans<()> {
             Trans::Pop
         }
     }
 
     #[test]
     fn switch_pop() {
-        let mut sm = StateMachine::new(State1(7));
+        let mut sm = StateMachine::new(Box::new(State1(7)));
         sm.start(StateData::new(&mut ()));
 
         for _ in 0..8 {

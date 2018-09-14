@@ -6,8 +6,7 @@ use input;
 use storyboard::*;
 
 pub struct Game<'a> {
-    storyboard: Storyboard<'a>,
-    input_binding: input::InputBinding,
+    pub storyboard: Storyboard<'a>,
 }
 
 impl<'a> Game<'a> {
@@ -18,7 +17,6 @@ impl<'a> Game<'a> {
     ) -> Self {
         Game {
             storyboard: Storyboard::new(stories),
-            input_binding: input::create_input_binding(),
         }
     }
 }
@@ -44,13 +42,13 @@ impl<'a> EventHandler for Game<'a> {
         _keymod: Mod,
         _repeat: bool,
     ) {
-        if let Some(ev) = self.input_binding.resolve(keycode) {
+        if let Some(ev) = self.storyboard.ctx.input_binding.resolve(keycode) {
             // self.scenes.input(ev, true);
         }
     }
 
     fn key_up_event(&mut self, _ctx: &mut Context, keycode: Keycode, _keymod: Mod, _repeat: bool) {
-        if let Some(ev) = self.input_binding.resolve(keycode) {
+        if let Some(ev) = self.storyboard.ctx.input_binding.resolve(keycode) {
             // self.scenes.input(ev, false);
         }
     }

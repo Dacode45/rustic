@@ -3,7 +3,7 @@ use storyboard;
 
 pub struct EmptyState;
 
-impl<'a> state::State<storyboard::StoryboardContext<'a>, ()> for EmptyState {
+impl<'a> state::State<storyboard::StoryboardContext<'a>> for EmptyState {
     fn update(
         &mut self,
         dt: f32,
@@ -27,7 +27,7 @@ impl WaitState {
     }
 }
 
-impl<'a> state::State<storyboard::StoryboardContext<'a>, ()> for WaitState {
+impl<'a> state::State<storyboard::StoryboardContext<'a>> for WaitState {
     fn update(
         &mut self,
         dt: f32,
