@@ -11,7 +11,7 @@ impl state::State<storyboard::StoryboardContext> for EmptyState {
         state::Trans::None
     }
 
-    fn state_name(&self) -> &'static str {
-        "EmptyState"
+    fn state_name(&self) -> String {
+        "EmptyState".to_owned()
     }
 }

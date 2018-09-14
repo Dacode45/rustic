@@ -71,8 +71,9 @@ impl Storyboard {
                         let trans = s.update(dt, state::StateData::new(ctx));
                         if let state::Trans::Pop = trans {
                             return Story::Done(s.state_name().to_owned());
+                        } else {
+                            storystack.transition(trans, state::StateData::new(ctx));
                         }
-                        storystack.transition(trans, state::StateData::new(ctx));
                         if s.is_blocking() {
                             done = true;
                         }
@@ -84,15 +85,30 @@ impl Storyboard {
             }).collect()
     }
 
-    pub fn do_nothing(&mut self) {}
+    pub fn get_context(&mut self, ctx: Rc<RefCell<Context>>) -> StoryboardContext {
+        StoryboardContext {
+            data: Rc::clone(&self.ctx),
+            ctx: ctx,
+        }
+    }
+
+    pub fn draw(&mut self, ctx: Rc<RefCell<Context>>) {
+        let mut s_ctx = self.get_context(ctx);
+        self.storystack.draw(state::StateData::new(&mut s_ctx));
+    }
 
     pub fn update(&mut self, dt: f32, ctx: Rc<RefCell<Context>>) {
         // setup the storyboard context
+        let mut s_ctx = self.get_context(ctx);
 
-        let mut s_ctx = StoryboardContext {
-            data: Rc::clone(&self.ctx),
-            ctx: ctx,
-        };
+        // run storystack
+        if !self.storystack.is_running() {
+            println!("not started");
+            self.storystack.start(state::StateData::new(&mut s_ctx));
+        } else {
+            self.storystack
+                .update(dt, state::StateData::new(&mut s_ctx));
+        }
 
         // capture the current stories
         let mut stories = Vec::new();
@@ -117,13 +133,5 @@ impl Storyboard {
         println!("state_names {:?}", state_names);
         // update the stories
         self.stories = Storyboard::update_stories(dt, &mut s_ctx, &mut self.storystack, stories);
-
-        // run storystack
-        if self.storystack.is_running() {
-            self.storystack.start(state::StateData::new(&mut s_ctx));
-        } else {
-            self.storystack
-                .update(dt, state::StateData::new(&mut s_ctx));
-        }
     }
 }

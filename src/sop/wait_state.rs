@@ -26,7 +26,7 @@ impl state::State<storyboard::StoryboardContext> for WaitState {
         }
     }
 
-    fn state_name(&self) -> &str {
-        "WaitState"
+    fn state_name(&self) -> String {
+        "WaitState".to_owned()
     }
 }

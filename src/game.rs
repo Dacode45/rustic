@@ -27,7 +27,7 @@ impl Game {
     }
 
     pub fn update(&mut self) {
-        const DESIRED_FPS: u32 = 24;
+        const DESIRED_FPS: u32 = 15;
         while { timer::check_update_time(&mut self.ctx.borrow_mut(), DESIRED_FPS) } {
             self.storyboard
                 .update(1.0 / DESIRED_FPS as f32, Rc::clone(&self.ctx));
@@ -37,13 +37,9 @@ impl Game {
     }
 
     pub fn draw(&mut self) {
-        if let Ok(ctx) = self.ctx.try_borrow_mut().as_mut() {
-            graphics::clear(ctx);
-
-            graphics::present(ctx);
-        } else {
-            panic!("Aieee, something else is holding a reference to the context -- draw!!")
-        }
+        graphics::clear(&mut *self.ctx.borrow_mut());
+        self.storyboard.draw(Rc::clone(&self.ctx));
+        graphics::present(&mut *self.ctx.borrow_mut());
     }
 
     pub fn handle_events(&mut self) {
@@ -68,43 +64,6 @@ impl Game {
             }
         } else {
             panic!("Aieee, something else is holding a reference to the context -- events!!")
-        }
-    }
-}
-
-impl EventHandler for Game {
-    fn update(&mut self, ctx: &mut Context) -> GameResult<()> {
-        const DESIRED_FPS: u32 = 60;
-        while timer::check_update_time(ctx, DESIRED_FPS) {
-            self.storyboard.do_nothing();
-            // self.storyboard.update(1.0 / DESIRED_FPS as f32, ctx);
-            // self.update_storyboard(1.0 / (DESIRED_FPS as f32), ctx);
-        }
-        Ok(())
-    }
-
-    fn draw(&mut self, ctx: &mut Context) -> GameResult<()> {
-        graphics::clear(ctx);
-        // self.scenes.draw(ctx);
-        graphics::present(ctx);
-        Ok(())
-    }
-
-    fn key_down_event(
-        &mut self,
-        _ctx: &mut Context,
-        keycode: Keycode,
-        _keymod: Mod,
-        _repeat: bool,
-    ) {
-        if let Some(_ev) = self.storyboard.ctx.borrow().input_binding.resolve(keycode) {
-            // self.scenes.input(ev, true);
-        }
-    }
-
-    fn key_up_event(&mut self, _ctx: &mut Context, keycode: Keycode, _keymod: Mod, _repeat: bool) {
-        if let Some(_ev) = self.storyboard.ctx.borrow().input_binding.resolve(keycode) {
-            // self.scenes.input(ev, false);
         }
     }
 }

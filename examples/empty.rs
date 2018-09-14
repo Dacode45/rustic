@@ -23,11 +23,7 @@ fn main() {
 
     let ctx = cb.build().unwrap();
 
-    let state = &mut game::Game::new(
-        cargo_path,
-        ctx,
-        vec![Story::Run(Box::new(WaitState::new(1.0)))],
-    );
+    let state = &mut game::Game::new(cargo_path, ctx, vec![fade_in(3.0, ggez::graphics::BLACK)]);
     while !state.should_exit {
         state.update();
         state.draw();

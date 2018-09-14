@@ -18,5 +18,6 @@ pub mod input;
 pub mod sop;
 pub mod state;
 pub mod storyboard;
+pub mod tween;
 pub mod util;
 pub mod world;

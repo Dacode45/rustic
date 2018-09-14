@@ -49,8 +49,8 @@ pub trait State<T> {
     fn is_blocking(&self) -> bool {
         true
     }
-    fn state_name(&self) -> &str {
-        "State"
+    fn state_name(&self) -> String {
+        "State".to_owned()
     }
 
     /// Executed on every frame immediately, as fast as the engine will allow.
@@ -111,12 +111,18 @@ impl<T> StateMachine<T> {
         if self.running {
             let mut trans = Trans::None;
             {
+                let mut not_blocking = true;
                 let mut substack: Vec<&mut Box<State<T>>> = self
                     .state_stack
                     .iter_mut()
                     .rev()
-                    .take_while(|state| state.is_blocking())
-                    .collect();
+                    .take_while(|state| {
+                        if !not_blocking {
+                            return false;
+                        }
+                        not_blocking = state.is_blocking();
+                        true
+                    }).collect();
                 if let Some((first, rest)) = substack.split_first_mut() {
                     trans = (&mut *first).update(dt, StateData { data });
 
@@ -127,6 +133,8 @@ impl<T> StateMachine<T> {
                             break;
                         }
                     }
+                } else {
+                    panic!("empty state list");
                 }
             }
             self.transition(trans, StateData { data });
@@ -157,6 +165,8 @@ impl<T> StateMachine<T> {
                 Trans::Switch(state) => self.switch(state, data),
                 Trans::Quit => self.stop(data),
             }
+        } else {
+            panic!("Not running");
         }
     }
 
@@ -176,6 +186,7 @@ impl<T> StateMachine<T> {
 
     /// Pauses the active state and pushes a new state onto the state stack.
     fn push(&mut self, next: Box<State<T>>, data: StateData<T>) {
+        println!("pushing");
         if self.running {
             let StateData { data } = data;
             if let Some(state) = self.state_stack.last_mut() {
