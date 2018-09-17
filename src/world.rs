@@ -1,5 +1,5 @@
 use ggez;
-use ggez::graphics::{Point2, Vector2};
+use ggez::graphics::{Point2, Rect, Vector2};
 use ggez_goodies::input as ginput;
 use specs;
 
@@ -7,6 +7,7 @@ use warmy;
 
 use std::path;
 
+use components::*;
 use input;
 
 pub struct World {
@@ -16,12 +17,20 @@ pub struct World {
 }
 
 impl World {
+    pub fn setup(&mut self) {
+        self.specs_world.register::<Camera>();
+
+        let camera = Camera::new(Rect::new(0.0, 0.0, 800.0, 800.0));
+
+        self.specs_world.create_entity().with(camera);
+    }
     pub fn new(ctx: &mut ggez::Context, resource_dir: Option<path::PathBuf>) -> Self {
         let resource_pathbuf: path::PathBuf = match resource_dir {
             Some(s) => s,
             None => ctx.filesystem.get_resources_dir().to_owned(),
         };
         info!("Setting up resource path: {:?}", resource_pathbuf);
+        ctx.filesystem.log_all();
 
         let opt = warmy::StoreOpt::default().set_root(resource_pathbuf);
         let store = warmy::Store::new(opt)
@@ -34,6 +43,8 @@ impl World {
             input: ginput::InputState::new(),
             specs_world: w,
         };
+
+        the_world.setup();
 
         the_world
     }

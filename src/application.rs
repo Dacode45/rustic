@@ -15,6 +15,7 @@ pub struct ApplicationBuilder {
 
 impl ApplicationBuilder {
     pub fn new(game_id: &'static str, author: &'static str) -> Self {
+        util::setup_logger().expect("Could not set up logging");
         ApplicationBuilder {
             author: author,
             game_id: game_id,
@@ -61,7 +62,6 @@ pub struct Application {
 
 impl Application {
     pub fn run(mut self) {
-        util::setup_logger().expect("Could not set up logging");
         while !self.game.should_exit {
             self.game.update();
             self.game.draw();

@@ -7,6 +7,7 @@ use std::rc::Rc;
 
 use input;
 use storyboard::*;
+use world::*;
 
 pub struct Game {
     pub ctx: Rc<RefCell<Context>>,
@@ -16,11 +17,16 @@ pub struct Game {
 }
 /// use https://github.com/ggez/ggez/issues/295
 impl Game {
-    pub fn new(_resource_dir: Option<path::PathBuf>, ctx: Context, stories: Vec<Story>) -> Self {
+    pub fn new(
+        _resource_dir: Option<path::PathBuf>,
+        mut ctx: Context,
+        stories: Vec<Story>,
+    ) -> Self {
         let events = event::Events::new(&ctx).unwrap();
+        let world = World::new(&mut ctx, None);
         Game {
             ctx: Rc::new(RefCell::new(ctx)),
-            storyboard: Storyboard::new(stories),
+            storyboard: Storyboard::new(world, stories),
             events: events,
             should_exit: false,
         }
@@ -59,7 +65,8 @@ impl Game {
                         println!("Quitting");
                         self.should_exit = true;
                     }
-                    x => println!("Event fired: {:?}", x),
+                    _ => ()
+                    // x => println!("Event fired: {:?}", x),
                 }
             }
         } else {

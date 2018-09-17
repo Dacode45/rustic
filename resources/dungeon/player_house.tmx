@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="160" height="160" tilewidth="16" tileheight="16">
+ <tileset firstgid="1" name="Image1" tilewidth="16" tileheight="16">
+  <image source="./tileset_sontos_house.png" width="480" height="256"/>
+ </tileset>
+ <tileset firstgid="481" name="collision_graphic" tilewidth="16" tileheight="16">
+  <image source="./collision_graphic.png" width="32" height="32"/>
+ </tileset>
+ <layer name="0-background" width="160" height="160">
+  <data encoding="base64" compression="zlib">
+   eJzt2ttNwzAYgNFkBgZjDGAARgAGAXZAhTEqpA7ACH0nCCxVVkySxqlzOQ9HrtSXv9Enp5FzrKrqCAAAAAAAAAAAAACwQV8tSs/EdsS9tfWYUnp2lu+0pZ91V+ehT/oKDb433dw06+1Id42PuvzvYjlCfw/N+jjSU6U/hgn9PTfry5/Tz0O8VvpjmNDfVZWH/hhCf5TU1t99naY/cjl9/o3bs/8xtbb+5nr/3c/gepHXUvrbR0pfN/KYe39xd/pbn0P96zqTw4j+Un1pb71Cf13nH291v/OPc+f4rzH9rVfor+vM47Pud/5x7hypxrS3bkPeu5r6HS39bU/Y/3IZM0vq3pv6DnLq+u+nQaaU6kt7XIL7LyXF+5x9j0uL+ys9D9vieYPStAcAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADr8g1bSwcg
+  </data>
+ </layer>
+ <layer name="1-detail" width="160" height="160">
+  <data encoding="base64" compression="zlib">
+   eJzt0sERQEAURMG/wSEQBIJAkKk5yUDtQXfV3OfwqgAAAAAAAAAAAAAAAAAAAOB7Q6sas6n1fsIfzeluyVb90cGW7vbs0B8dnOnuym79AQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAwOsBOSIFcQ==
+  </data>
+ </layer>
+ <layer name="2-collision" width="160" height="160">
+  <data encoding="base64" compression="zlib">
+   eJztwQEBAAAAgiD/r25IQAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHwYkA8AAQ==
+  </data>
+ </layer>
+</map>

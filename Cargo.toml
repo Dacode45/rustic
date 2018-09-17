@@ -9,6 +9,7 @@ ggez = "0.4"
 ggez-goodies = { git = "https://github.com/ggez/ggez-goodies", branch = "master" }
 specs = "0.10"
 specs-derive = "0.1"
+tiled = "0.7.2"
 warmy = "0.7"
 
 # Utility stuff

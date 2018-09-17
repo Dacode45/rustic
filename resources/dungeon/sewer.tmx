@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="50" height="25" tilewidth="16" tileheight="16">
+ <tileset firstgid="1" name="sewer_tiles" tilewidth="16" tileheight="16">
+  <image source="./tileset_sewer.png" width="281" height="291"/>
+ </tileset>
+ <tileset firstgid="307" name="collision_graphic" tilewidth="16" tileheight="16">
+  <image source="./collision_graphic.png" width="32" height="32"/>
+ </tileset>
+ <layer name="tilemap" width="50" height="25">
+  <data encoding="base64" compression="zlib">
+   eJxTZWBgUCUSi9AJE+sebG5jA2LvIYyR/REzhDGyP3KHMEb2x/YhjEf9MbjwqD8GFx71x+DCw9EfhkMYk9MmG8WjeBSP4lE8ikfxKB7FuDEAJzWm4w==
+  </data>
+ </layer>
+ <layer name="detail" width="50" height="25">
+  <data encoding="base64" compression="zlib">
+   eJztwTEBAAAAwqD1T20KP6AAAAAAgLcBE4gAAQ==
+  </data>
+ </layer>
+ <layer name="collision" width="50" height="25" opacity="0.56">
+  <data encoding="base64" compression="zlib">
+   eJzt1bENACAIRNFzGRZg/91stLE24SD/JYbWHwpySTngXdX/oGNuR3dvU1d0eKHDCx0+4szqO/bjDob67wMAAMDFBqLdNLU=
+  </data>
+ </layer>
+</map>

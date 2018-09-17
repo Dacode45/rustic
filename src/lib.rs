@@ -5,6 +5,7 @@ extern crate ggez_goodies;
 extern crate specs;
 #[macro_use]
 extern crate specs_derive;
+extern crate tiled;
 extern crate warmy;
 
 #[macro_use]
@@ -14,8 +15,10 @@ extern crate failure;
 extern crate fern;
 
 pub mod application;
+pub mod components;
 pub mod game;
 pub mod input;
+pub mod map;
 pub mod sop;
 pub mod state;
 pub mod storyboard;

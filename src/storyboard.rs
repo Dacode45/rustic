@@ -7,6 +7,7 @@ use std::rc::Rc;
 use input;
 use sop;
 use state;
+use world::*;
 
 type StoryConstructor = Fn(&mut StoryboardContext) -> Story;
 
@@ -20,11 +21,12 @@ pub enum Story {
 }
 
 pub struct PartialStoryboardContext {
-    pub input_binding: input::InputBinding,
+    // pub input_binding: input::InputBinding,
+    pub world: World,
 }
 
 pub struct StoryboardContext {
-    pub data: Rc<RefCell<PartialStoryboardContext>>,
+    pub state: Rc<RefCell<PartialStoryboardContext>>,
     pub ctx: Rc<RefCell<Context>>,
 }
 
@@ -41,12 +43,10 @@ pub struct Storyboard {
 }
 
 impl Storyboard {
-    pub fn new(stories: Vec<Story>) -> Self {
+    pub fn new(world: World, stories: Vec<Story>) -> Self {
         Storyboard {
             stories: stories,
-            ctx: Rc::new(RefCell::new(PartialStoryboardContext {
-                input_binding: input::create_input_binding(),
-            })),
+            ctx: Rc::new(RefCell::new(PartialStoryboardContext { world: world })),
             storystack: state::StateMachine::new(Box::new(sop::EmptyState)),
         }
     }
@@ -87,7 +87,7 @@ impl Storyboard {
 
     pub fn get_context(&mut self, ctx: Rc<RefCell<Context>>) -> StoryboardContext {
         StoryboardContext {
-            data: Rc::clone(&self.ctx),
+            state: Rc::clone(&self.ctx),
             ctx: ctx,
         }
     }

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="100" height="100" tilewidth="16" tileheight="16">
+ <tileset firstgid="1" name="dungeon_tileset" tilewidth="16" tileheight="16">
+  <image source="../art/dungeon_tileset.png" width="281" height="291"/>
+ </tileset>
+ <tileset firstgid="307" name="collision_graphic" tilewidth="16" tileheight="16">
+  <image source="collision_graphic.png" width="32" height="32"/>
+ </tileset>
+ <layer name="background" width="100" height="100">
+  <data encoding="base64" compression="zlib">
+   eJzt0zEOgCAMQFGO4MD9j+LkwYwJi4uhxtga3/BGCPRDb611AAAAAAAI2Ibsc6BHNUeHRZPHZxp1tW5mz+w7V6ZHLXrUokctd2enR16PyN9Z9SjVY3ZP9PgCPeAs8t7fkD2PbNnz10MPAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAP9oBB70A0w==
+  </data>
+ </layer>
+ <layer name="detail" width="100" height="100">
+  <data encoding="base64" compression="zlib">
+   eJztzjENAAAIA7D5t4NBPCwkPK2CJgAAAAAAAAAAtOY7AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAwLkFeFYAtA==
+  </data>
+ </layer>
+ <layer name="collision" width="100" height="100">
+  <data encoding="base64" compression="zlib">
+   eJzt100KgCAQgNE6U/e/W9syCX+KmeI9cJmL+VBpWQAAAAAActvW8yLWsYEescozoce88r7pXTP7cTU6l7vvWvbUo06PXPTIRY9cWmfX8x7rMS5qdnrUvdHD+RinRy565DD7X/70AuAbot8L7wcAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPzXDgXqHhE=
+  </data>
+ </layer>
+</map>
