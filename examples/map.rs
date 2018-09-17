@@ -10,6 +10,7 @@ fn main() {
     builder.stories(vec![
         create_scene("/dungeon/map_jail.tmx"),
         move_camera_to_tile(43, 15, 3.0),
+        quit_state(),
     ]);
     let app = builder.build();
     app.run();

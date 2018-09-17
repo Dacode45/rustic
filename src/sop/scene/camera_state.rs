@@ -44,8 +44,8 @@ impl State<StoryboardContext> for MoveCameraToTile {
     }
     fn on_start(&mut self, ctx: StateData<StoryboardContext>) -> StoryTrans {
         let state = &mut *ctx.data.state.borrow_mut();
-        let mut camera = state.world.specs_world.write_resource::<Camera>();
-        let mut map = state.world.specs_world.write_resource::<Map>();
+        let camera = state.world.specs_world.write_resource::<Camera>();
+        let map = state.world.specs_world.write_resource::<Map>();
 
         let (x, y) = map.point_to_tile(camera.0.x, camera.0.y);
         self.start_tile_x = x;
@@ -62,7 +62,7 @@ impl State<StoryboardContext> for MoveCameraToTile {
         return Trans::Push(tween);
     }
 
-    fn update(&mut self, dt: f32, ctx: StateData<StoryboardContext>) -> StoryTrans {
+    fn update(&mut self, _dt: f32, ctx: StateData<StoryboardContext>) -> StoryTrans {
         let state = &mut *ctx.data.state.borrow_mut();
         let mut camera = state.world.specs_world.write_resource::<Camera>();
         let mut map = state.world.specs_world.write_resource::<Map>();

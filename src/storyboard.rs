@@ -135,7 +135,7 @@ impl Storyboard {
             .iter()
             .map(|story| match story {
                 Story::Setup(_) => "setup state".to_owned(),
-                Story::Start(s) => "start state".to_owned(),
+                Story::Start(_s) => "start state".to_owned(),
                 Story::Run(s) => s.state_name().to_owned(),
                 Story::Done(name) => format!("Done: {}", name),
             }).collect();

@@ -41,7 +41,7 @@ impl FadeStory {
 }
 
 impl State<StoryboardContext> for FadeStory {
-    fn on_start(&mut self, ctx: StateData<StoryboardContext>) -> StoryTrans {
+    fn on_start(&mut self, _ctx: StateData<StoryboardContext>) -> StoryTrans {
         return Trans::Push(Box::new(FadeState::new(
             self.duration,
             self.color,
@@ -50,7 +50,7 @@ impl State<StoryboardContext> for FadeStory {
             Rc::clone(&self.done),
         )));
     }
-    fn update(&mut self, dt: f32, ctx: StateData<StoryboardContext>) -> StoryTrans {
+    fn update(&mut self, _dt: f32, _ctx: StateData<StoryboardContext>) -> StoryTrans {
         if *self.done.borrow() {
             return Trans::Pop;
         }
@@ -90,7 +90,7 @@ impl State<StoryboardContext> for FadeState {
     fn state_name(&self) -> String {
         return format!("FadeState: {}", *self.alpha.borrow()).to_owned();
     }
-    fn update(&mut self, dt: f32, ctx: StateData<StoryboardContext>) -> StoryTrans {
+    fn update(&mut self, _dt: f32, _ctx: StateData<StoryboardContext>) -> StoryTrans {
         if !self.started {
             self.started = true;
 

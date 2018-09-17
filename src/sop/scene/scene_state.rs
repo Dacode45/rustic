@@ -61,7 +61,7 @@ impl State<StoryboardContext> for SceneStory {
     fn state_name(&self) -> String {
         format!("SceneStory: {}", self.tilemap_src)
     }
-    fn update(&mut self, dt: f32, ctx: StateData<StoryboardContext>) -> StoryTrans {
+    fn update(&mut self, _dt: f32, _ctx: StateData<StoryboardContext>) -> StoryTrans {
         if !self.started {
             self.started = true;
             return Trans::Push(Box::new(SceneState::new(Rc::clone(&self.done))));
@@ -90,7 +90,7 @@ impl State<StoryboardContext> for SceneState {
     fn state_name(&self) -> String {
         return "SceneState".to_owned();
     }
-    fn update(&mut self, dt: f32, ctx: StateData<StoryboardContext>) -> StoryTrans {
+    fn update(&mut self, _dt: f32, _ctx: StateData<StoryboardContext>) -> StoryTrans {
         Trans::None
     }
     fn draw(&mut self, ctx: StateData<StoryboardContext>) {

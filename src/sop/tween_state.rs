@@ -16,7 +16,7 @@ impl state::State<storyboard::StoryboardContext> for TweenState {
     fn update(
         &mut self,
         dt: f32,
-        ctx: state::StateData<storyboard::StoryboardContext>,
+        _ctx: state::StateData<storyboard::StoryboardContext>,
     ) -> storyboard::StoryTrans {
         self.tween.update(dt, &*self.tween_fn);
         (self.apply_fn)(self.tween.value());

@@ -20,7 +20,7 @@ impl<'a> graphics::Drawable for SpriteDrawContext<'a> {
         param.dest.y += pos.y;
         self.sprite.sprite_batch.draw_ex(ctx, param)
     }
-    fn set_blend_mode(&mut self, mode: Option<graphics::BlendMode>) {}
+    fn set_blend_mode(&mut self, _mode: Option<graphics::BlendMode>) {}
     fn get_blend_mode(&self) -> Option<graphics::BlendMode> {
         None
     }
@@ -77,7 +77,7 @@ impl graphics::Drawable for Sprite {
     fn draw_ex(&self, ctx: &mut ggez::Context, param: graphics::DrawParam) -> ggez::GameResult<()> {
         self.sprite_batch.draw_ex(ctx, param)
     }
-    fn set_blend_mode(&mut self, mode: Option<graphics::BlendMode>) {}
+    fn set_blend_mode(&mut self, _mode: Option<graphics::BlendMode>) {}
     fn get_blend_mode(&self) -> Option<graphics::BlendMode> {
         None
     }
