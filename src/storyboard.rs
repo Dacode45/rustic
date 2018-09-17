@@ -16,6 +16,7 @@ pub type StoryTrans = state::Trans<StoryboardContext>;
 
 pub enum Story {
     Setup(Box<StoryConstructor>),
+    Start(Box<StoryState>),
     Run(Box<StoryState>),
     Done(String),
 }
@@ -23,6 +24,7 @@ pub enum Story {
 pub struct PartialStoryboardContext {
     // pub input_binding: input::InputBinding,
     pub world: World,
+    pub should_quit: bool,
 }
 
 pub struct StoryboardContext {
@@ -46,7 +48,10 @@ impl Storyboard {
     pub fn new(world: World, stories: Vec<Story>) -> Self {
         Storyboard {
             stories: stories,
-            ctx: Rc::new(RefCell::new(PartialStoryboardContext { world: world })),
+            ctx: Rc::new(RefCell::new(PartialStoryboardContext {
+                world: world,
+                should_quit: false,
+            })),
             storystack: state::StateMachine::new(Box::new(sop::EmptyState)),
         }
     }
@@ -67,6 +72,18 @@ impl Storyboard {
                 }
                 let next = match story {
                     Story::Setup(setup) => setup(ctx),
+                    Story::Start(mut start) => {
+                        let trans = start.on_start(state::StateData::new(ctx));
+                        if let state::Trans::Pop = trans {
+                            return Story::Done(start.state_name().to_owned());
+                        } else {
+                            storystack.transition(trans, state::StateData::new(ctx));
+                        }
+                        if start.is_blocking() {
+                            done = true;
+                        }
+                        Story::Run(start)
+                    }
                     Story::Run(mut s) => {
                         let trans = s.update(dt, state::StateData::new(ctx));
                         if let state::Trans::Pop = trans {
@@ -92,12 +109,12 @@ impl Storyboard {
         }
     }
 
-    pub fn draw(&mut self, ctx: Rc<RefCell<Context>>) {
+    pub fn draw_storyboard(&mut self, ctx: Rc<RefCell<Context>>) {
         let mut s_ctx = self.get_context(ctx);
         self.storystack.draw(state::StateData::new(&mut s_ctx));
     }
 
-    pub fn update(&mut self, dt: f32, ctx: Rc<RefCell<Context>>) {
+    pub fn update_storyboard(&mut self, dt: f32, ctx: Rc<RefCell<Context>>) -> bool {
         // setup the storyboard context
         let mut s_ctx = self.get_context(ctx);
 
@@ -118,6 +135,7 @@ impl Storyboard {
             .iter()
             .map(|story| match story {
                 Story::Setup(_) => "setup state".to_owned(),
+                Story::Start(s) => "start state".to_owned(),
                 Story::Run(s) => s.state_name().to_owned(),
                 Story::Done(name) => format!("Done: {}", name),
             }).collect();
@@ -133,5 +151,9 @@ impl Storyboard {
         info!("state_names {:?}", state_names);
         // update the stories
         self.stories = Storyboard::update_stories(dt, &mut s_ctx, &mut self.storystack, stories);
+        if s_ctx.state.borrow().should_quit {
+            return true;
+        }
+        false
     }
 }

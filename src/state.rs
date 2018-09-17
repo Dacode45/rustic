@@ -34,8 +34,10 @@ pub enum Trans<T> {
 
 /// A trait which defines game states that can be used by the state machine.
 pub trait State<T> {
-    /// Executed when the game state begins.
-    fn on_start(&mut self, _data: StateData<T>) {}
+    /// Executed when the game state begins. Trans is ignored
+    fn on_start(&mut self, _data: StateData<T>) -> Trans<T> {
+        Trans::None
+    }
 
     /// Executed when the game state exits.
     fn on_stop(&mut self, _data: StateData<T>) {}

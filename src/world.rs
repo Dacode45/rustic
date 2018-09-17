@@ -5,10 +5,12 @@ use specs;
 
 use warmy;
 
+use std::collections::HashMap;
 use std::path;
 
 use components::*;
 use input;
+use resources::*;
 
 pub struct World {
     pub assets: warmy::Store<ggez::Context>,
@@ -18,11 +20,12 @@ pub struct World {
 
 impl World {
     pub fn setup(&mut self) {
-        self.specs_world.register::<Camera>();
-
-        let camera = Camera::new(Rect::new(0.0, 0.0, 800.0, 800.0));
-
-        self.specs_world.create_entity().with(camera);
+        // setup spritemap
+        self.specs_world
+            .add_resource::<SpriteMap>(SpriteMap(HashMap::new()));
+        self.specs_world
+            .add_resource::<Camera>(Camera(Rect::new(0.0, 0.0, 800.0, 800.0)))
+        // setup camera
     }
     pub fn new(ctx: &mut ggez::Context, resource_dir: Option<path::PathBuf>) -> Self {
         let resource_pathbuf: path::PathBuf = match resource_dir {

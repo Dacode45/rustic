@@ -35,8 +35,9 @@ impl Game {
     pub fn update(&mut self) {
         const DESIRED_FPS: u32 = 15;
         while { timer::check_update_time(&mut self.ctx.borrow_mut(), DESIRED_FPS) } {
-            self.storyboard
-                .update(1.0 / DESIRED_FPS as f32, Rc::clone(&self.ctx));
+            self.should_exit = self
+                .storyboard
+                .update_storyboard(1.0 / DESIRED_FPS as f32, Rc::clone(&self.ctx));
         }
 
         // self.scenes.world.assets.sync(ctx);
@@ -44,7 +45,7 @@ impl Game {
 
     pub fn draw(&mut self) {
         graphics::clear(&mut *self.ctx.borrow_mut());
-        self.storyboard.draw(Rc::clone(&self.ctx));
+        self.storyboard.draw_storyboard(Rc::clone(&self.ctx));
         graphics::present(&mut *self.ctx.borrow_mut());
     }
 
