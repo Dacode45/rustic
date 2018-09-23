@@ -1,14 +1,10 @@
-use state;
-use storyboard;
+use state::*;
+use storyboard::*;
 pub struct EmptyState;
 
-impl state::State<storyboard::StoryboardContext> for EmptyState {
-    fn update(
-        &mut self,
-        _dt: f32,
-        _context: state::StateData<storyboard::StoryboardContext>,
-    ) -> storyboard::StoryTrans {
-        state::Trans::None
+impl State<StoryboardContext> for EmptyState {
+    fn update(&mut self, _dt: f32, _context: StateData<StoryboardContext>) -> StoryTrans {
+        Trans::None
     }
 
     fn state_name(&self) -> String {

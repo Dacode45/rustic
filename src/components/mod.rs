@@ -11,6 +11,7 @@ pub use self::common::*;
 pub use self::render::*;
 
 pub fn register_components(world: &mut World) {
+    world.register::<EntityID>();
     world.register::<Animation>();
     world.register::<Position>();
     world.register::<TilePosition>();

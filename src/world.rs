@@ -32,7 +32,7 @@ impl World {
         let mut w = specs::World::new();
         add_basic_resources(&mut w);
 
-        let mut the_world = Self {
+        let the_world = Self {
             assets: store,
             specs_world: w,
         };

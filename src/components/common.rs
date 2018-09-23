@@ -2,6 +2,13 @@ use ggez::graphics::*;
 use specs::{Component, VecStorage, World};
 
 #[derive(Debug, Clone)]
+pub struct EntityID(pub String);
+
+impl Component for EntityID {
+    type Storage = VecStorage<Self>;
+}
+
+#[derive(Debug, Clone)]
 pub struct Position(pub Point2);
 
 impl Default for Position {

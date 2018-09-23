@@ -20,7 +20,6 @@ impl SpriteComponent for Renderable {
         if self.render.frame != sprite.frame() {
             sprite.set_frame(self.render.frame);
         }
-        warn!("Sprite {}: {}", sprite.frame(), sprite.uvs.len());
         sprite.sprite_batch.clear();
         let mut params = graphics::DrawParam::default();
         params.src = sprite.uvs[sprite.frame()];

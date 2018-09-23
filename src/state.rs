@@ -181,13 +181,16 @@ impl<T> StateMachine<T> {
             }
 
             self.state_stack.push(state);
-            let state = self.state_stack.last_mut().unwrap();
-            state.on_start(StateData { data });
+            let trans = {
+                let state = self.state_stack.last_mut().unwrap();
+                state.on_start(StateData { data })
+            };
+            self.transition(trans, StateData { data });
         }
     }
 
     /// Pauses the active state and pushes a new state onto the state stack.
-    fn push(&mut self, next: Box<State<T> + Sync>, data: StateData<T>) {
+    pub fn push(&mut self, next: Box<State<T> + Sync>, data: StateData<T>) {
         println!("pushing");
         if self.running {
             let StateData { data } = data;
@@ -198,8 +201,11 @@ impl<T> StateMachine<T> {
             }
 
             self.state_stack.push(next);
-            let next = self.state_stack.last_mut().unwrap();
-            next.on_start(StateData { data });
+            let trans = {
+                let next = self.state_stack.last_mut().unwrap();
+                next.on_start(StateData { data })
+            };
+            self.transition(trans, StateData { data });
         }
     }
 

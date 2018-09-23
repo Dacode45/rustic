@@ -67,7 +67,7 @@ impl State<StoryboardContext> for MoveCameraToTile {
         let mut camera = state.world.specs_world.write_resource::<Camera>();
         let current_map = state.world.specs_world.read_resource::<CurrentMap>();
         let mut maps = state.world.specs_world.write_resource::<Maps>();
-        let mut map = maps.0.get_mut(&current_map.0).unwrap();
+        let map = maps.0.get_mut(&current_map.0).unwrap();
 
         let t = *self.t.read().unwrap();
 

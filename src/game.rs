@@ -6,6 +6,7 @@ use std::path;
 use std::rc::Rc;
 
 use input;
+use resources::*;
 use storyboard::*;
 use world::*;
 
@@ -37,11 +38,17 @@ impl Game {
 
     pub fn update(&mut self) {
         const DESIRED_FPS: u32 = 60;
+        const DESIRED_SPF: f32 = 1.0 / DESIRED_FPS as f32;
+        {
+            let state = self.storyboard.ctx.borrow_mut();
+            let mut dt = state.world.specs_world.write_resource::<DeltaTime>();
+            dt.0 = DESIRED_SPF;
+        }
         while { timer::check_update_time(&mut self.ctx.borrow_mut(), DESIRED_FPS) } {
             {
                 let state = self.storyboard.ctx.borrow_mut();
                 let mut input = state.world.specs_world.write_resource::<input::Input>();
-                input.0.update(1.0 / DESIRED_FPS as f32);
+                input.0.update(DESIRED_SPF);
             }
 
             self.should_exit = self

@@ -18,18 +18,24 @@ pub struct Map {
     pub(crate) tile_set: usize,
 
     // gid of tileset with blocking layer
-    pub(crate) blocking_tile: Option<u32>,
+    pub(crate) blocking_tile: u32,
 
     pub(crate) map_def: tiled::Map,
 }
 
 impl Map {
     pub fn new(map_def: tiled::Map) -> Self {
-        let mut blocking_tile = None;
+        let mut blocking_tile = 0;
+        let mut found_blocking = false;
         for tileset in map_def.tilesets.iter() {
             if tileset.name.contains("collision") {
-                blocking_tile = Some(tileset.first_gid);
+                blocking_tile = tileset.first_gid;
+                found_blocking = true;
+                break;
             }
+        }
+        if !found_blocking {
+            panic!("No collision tile found");
         }
         Map {
             pos: Point2::new(0.0, 0.0),
@@ -65,9 +71,36 @@ impl Map {
         return (m.tile_width * m.width, m.height * m.tile_height);
     }
 
-    /// Advance Getters
+    /// Advance Getters/ Setters
     pub fn get_tile(&self, x: usize, y: usize, layer: usize) -> u32 {
         self.map_def.layers[layer].tiles[y][x]
+    }
+
+    pub fn write_tile(&mut self, x: usize, y: usize, layer: usize, tile: u32) {
+        self.map_def.layers[layer].tiles[y][x] = tile;
+    }
+
+    pub fn in_bounds(&mut self, x: usize, y: usize, layer: usize) -> bool {
+        let y_bounds = self.map_def.layers[layer].tiles.len();
+        let x_bounds = self.map_def.layers[layer].tiles[y].len();
+        x < x_bounds && y < y_bounds
+    }
+
+    // is blocking
+    pub fn is_blocking(&self, x: usize, y: usize, layer: usize) -> bool {
+        let collision_layer = layer + 2;
+
+        let tile = self.get_tile(x, y, collision_layer);
+        self.blocking_tile == tile
+    }
+
+    pub fn set_blocking(&mut self, x: usize, y: usize, layer: usize, blocking: bool) {
+        if blocking {
+            let bt = self.blocking_tile;
+            self.write_tile(x, y, layer + 2, bt);
+        } else {
+            self.write_tile(x, y, layer + 2, 0);
+        }
     }
 
     /// converts world pixel coordinates to tile in map

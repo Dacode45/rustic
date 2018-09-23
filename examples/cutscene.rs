@@ -4,8 +4,10 @@ extern crate tiled;
 
 use ggez::graphics::Rect;
 
+use components::animation::Facing::*;
 use rustic::application::*;
 use rustic::components;
+use rustic::entities::*;
 use rustic::resources::*;
 use rustic::sop::*;
 use rustic::storyboard::*;
@@ -23,7 +25,41 @@ fn main() {
             Story::Done("Setup".to_owned())
         })),
         create_scene("/dungeon/map_jail.tmx"),
-        add_character(),
+        add_character(new_guard),
+        move_character("guard1", vec![
+           Up,
+                        Up,
+                        Up,
+                        Left,
+                        Left,
+                        Left,
+                        Left,
+                        Left,
+                        Left,
+                        Down,
+                        Down,
+        ]),
+        move_character("guard1", vec![
+           Right,
+                    Right,
+                    Right,
+                    Right,
+                    Right,
+                    Right,
+                    Right,
+                    Right,
+                    Right,
+                    Up,
+        ]),
+        move_character("guard1", vec![
+                        Up,
+                        Up,
+                        Up,
+                        Up,
+                        Up,
+                        Up,
+        ])
+
         // move_camera_to_tile(43, 15, 3.0),
         // quit_state(),
     ]);

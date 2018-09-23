@@ -3,6 +3,7 @@ use specs::{Component, VecStorage, World};
 use std::cmp;
 use std::collections::HashMap;
 
+#[derive(Clone)]
 pub enum Facing {
     Up,
     Right,
@@ -73,7 +74,7 @@ impl Animation {
 
     pub fn set_frames(&mut self, frames: Vec<usize>) {
         self.frames = frames;
-        self.index = cmp::min(self.index, self.frames.len() - 1);
+        self.index = 0;
     }
 
     pub fn frame(&self) -> usize {

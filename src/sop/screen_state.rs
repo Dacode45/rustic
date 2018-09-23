@@ -21,7 +21,7 @@ impl State<StoryboardContext> for ScreenStory {
     fn state_name(&self) -> String {
         return format!("ScreenState: {:?}", self.color.to_rgba());
     }
-    fn on_start(&mut self, ctx: StateData<StoryboardContext>) -> StoryTrans {
+    fn on_start(&mut self, _ctx: StateData<StoryboardContext>) -> StoryTrans {
         Trans::Push(Box::new(self.clone()))
     }
     fn draw(&mut self, ctx: StateData<StoryboardContext>) {

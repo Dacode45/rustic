@@ -1,6 +1,6 @@
 use specs;
 use specs::prelude::Resources;
-use specs::{Read, System, SystemData, Write, WriteStorage};
+use specs::{Read, ReadStorage, System, SystemData, Write, WriteStorage};
 
 use std::sync::{Arc, RwLock};
 
@@ -17,6 +17,7 @@ impl<'a> System<'a> for UpdateCharacters {
         Read<'a, Input>,
         Read<'a, CurrentMap>,
         Write<'a, Maps>,
+        ReadStorage<'a, EntityID>,
         WriteStorage<'a, Animation>,
         WriteStorage<'a, Position>,
         WriteStorage<'a, TilePosition>,
@@ -26,35 +27,33 @@ impl<'a> System<'a> for UpdateCharacters {
 
     fn run(
         &mut self,
-        (dt, input, c_map, mut maps, mut anim, mut pos, mut t_pos, mut render, mut cc): Self::SystemData,
+        (dt, input, c_map, mut maps, id, mut anim, mut pos, mut t_pos, mut render, mut cc): Self::SystemData,
 ){
         use specs::Join;
-        let mut map = maps.0.remove(&c_map.0).unwrap();
+        let map = maps.0.remove(&c_map.0).unwrap();
         let sync_map = Arc::new(RwLock::new(map));
 
         for anim in (&mut anim).join() {
             anim.update(dt.0);
         }
 
-        for (anim, pos, t_pos, render, cc) in
-            (&mut anim, &mut pos, &mut t_pos, &mut render, &mut cc).join()
+        for (id, anim, pos, t_pos, render, cc) in
+            (&id, &mut anim, &mut pos, &mut t_pos, &mut render, &mut cc).join()
         {
             let mut character = Character::new(
-                anim.clone(),
-                pos.clone(),
-                t_pos.clone(),
-                render.clone(),
-                sync_map.clone(),
-                input.0.clone(),
+                Some(id.clone()),
+                Some(anim.clone()),
+                Some(pos.clone()),
+                Some(t_pos.clone()),
+                Some(render.clone()),
+                Some(sync_map.clone()),
+                Some(input.0.clone()),
             );
-            if !cc.states.is_running() {
-                cc.states.start(StateData::new(&mut character));
-            }
-            cc.states.update(dt.0, StateData::new(&mut character));
-            *anim = character.anim;
-            *pos = character.pos;
-            *t_pos = character.t_pos;
-            *render = character.render;
+            cc.update(dt.0, &mut character);
+            *anim = character.anim.unwrap();
+            *pos = character.pos.unwrap();
+            *t_pos = character.t_pos.unwrap();
+            *render = character.render.unwrap();
         }
         let map = Arc::try_unwrap(sync_map).unwrap().into_inner().unwrap();
         maps.0.insert(c_map.0.clone(), map);

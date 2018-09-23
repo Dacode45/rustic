@@ -105,7 +105,7 @@ impl State<StoryboardContext> for SceneState {
     }
     fn update(&mut self, _dt: f32, ctx: StateData<StoryboardContext>) -> StoryTrans {
         let state = &mut *ctx.data.state.borrow_mut();
-        let res = &state.world.specs_world.res;
+        let _res = &state.world.specs_world.res;
         let mut disp = SceneState::register_systems();
         disp.dispatch(&state.world.specs_world.res);
         Trans::None
@@ -137,12 +137,13 @@ impl State<StoryboardContext> for SceneState {
         let pos = state.world.specs_world.read_storage::<Position>();
         let anim = state.world.specs_world.read_storage::<Animation>();
         for (render, anim) in (&mut render, &anim).join() {
+            warn!("anim {:?}", anim);
+            warn!("render {:?}", render);
             render.frame = anim.frame();
         }
 
         for (pos, render) in (&pos, &render).join() {
             let renderable = Renderable::new(pos.clone(), render.clone());
-            warn!("Attempting to draw character: {:?}", renderable);
             if let Some(sprite) = sprite_map.0.get_mut(&render.sprite_id) {
                 let s = sprite.with_context(&renderable);
                 graphics::draw(ctx, &s, Point2::new(0.0, 0.0), 0.0).unwrap();
