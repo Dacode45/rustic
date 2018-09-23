@@ -5,6 +5,7 @@ extern crate tiled;
 use ggez::graphics::Rect;
 
 use rustic::application::*;
+use rustic::components;
 use rustic::resources::*;
 use rustic::sop::*;
 use rustic::storyboard::*;
@@ -18,11 +19,13 @@ fn main() {
             add_sprite_map_resource(world);
             add_camera_resource(world, Rect::new(0.0, 0.0, 800.0, 600.0));
             add_map_resource(world);
+            components::register_components(world);
             Story::Done("Setup".to_owned())
         })),
         create_scene("/dungeon/map_jail.tmx"),
-        move_camera_to_tile(43, 15, 3.0),
-        quit_state(),
+        add_character(),
+        // move_camera_to_tile(43, 15, 3.0),
+        // quit_state(),
     ]);
     let app = builder.build();
     app.run();

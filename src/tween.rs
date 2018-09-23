@@ -1,8 +1,10 @@
-pub type TweenFn = Fn(f32, f32, f32, f32) -> f32;
-
 pub fn ease_in_quad(t: f32, b: f32, c: f32, d: f32) -> f32 {
     let t = t / d;
     c * t * t + b
+}
+
+pub enum TweenFn {
+    EaseInQuad,
 }
 
 pub struct Tween {
@@ -30,7 +32,10 @@ impl Tween {
         self.start_value + self.distance
     }
 
-    pub fn update(&mut self, elapsed_time: f32, tween_f: &Fn(f32, f32, f32, f32) -> f32) {
+    pub fn update(&mut self, elapsed_time: f32, tween_f: &TweenFn) {
+        let tween_f = match tween_f {
+            TweenFn::EaseInQuad => ease_in_quad,
+        };
         self.time_passed = self.time_passed + (elapsed_time);
         self.current = (tween_f)(
             self.time_passed,

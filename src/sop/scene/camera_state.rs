@@ -1,5 +1,4 @@
-use std::cell::RefCell;
-use std::rc::Rc;
+use std::sync::{Arc, RwLock};
 
 use map::*;
 use resources::*;
@@ -20,7 +19,7 @@ pub struct MoveCameraToTile {
     end_tile_y: usize,
 
     duration: f32,
-    t: Rc<RefCell<f32>>,
+    t: Arc<RwLock<f32>>,
 }
 
 impl MoveCameraToTile {
@@ -32,32 +31,33 @@ impl MoveCameraToTile {
             end_tile_x: tile_x,
             end_tile_y: tile_y,
             duration,
-            t: Rc::new(RefCell::new(0.0)),
+            t: Arc::new(RwLock::new(0.0)),
         }
     }
 }
 
 impl State<StoryboardContext> for MoveCameraToTile {
     fn state_name(&self) -> String {
-        let t = *self.t.borrow();
-        format!("MoveCameraToTile {}", t)
+        format!("MoveCameraToTile {},{}", self.end_tile_x, self.end_tile_y)
     }
     fn on_start(&mut self, ctx: StateData<StoryboardContext>) -> StoryTrans {
         let state = &mut *ctx.data.state.borrow_mut();
         let camera = state.world.specs_world.write_resource::<Camera>();
-        let map = state.world.specs_world.write_resource::<Map>();
+        let current_map = state.world.specs_world.read_resource::<CurrentMap>();
+        let mut maps = state.world.specs_world.write_resource::<Maps>();
+        let map = maps.0.get_mut(&current_map.0).unwrap();
 
         let (x, y) = map.point_to_tile(camera.0.x, camera.0.y);
         self.start_tile_x = x;
         self.start_tile_y = y;
 
-        let t = Rc::clone(&self.t);
+        let t = self.t.clone();
         let tween = Box::new(TweenState {
             tween: Tween::new(0.0, 1.0, self.duration),
-            tween_fn: Box::new(ease_in_quad),
-            apply_fn: Box::new(move |value| {
-                *t.borrow_mut() = value;
-            }),
+            tween_fn: TweenFn::EaseInQuad,
+            apply_fn: move |value| {
+                *t.write().unwrap() = value;
+            },
         });
         return Trans::Push(tween);
     }
@@ -65,9 +65,11 @@ impl State<StoryboardContext> for MoveCameraToTile {
     fn update(&mut self, _dt: f32, ctx: StateData<StoryboardContext>) -> StoryTrans {
         let state = &mut *ctx.data.state.borrow_mut();
         let mut camera = state.world.specs_world.write_resource::<Camera>();
-        let mut map = state.world.specs_world.write_resource::<Map>();
+        let current_map = state.world.specs_world.read_resource::<CurrentMap>();
+        let mut maps = state.world.specs_world.write_resource::<Maps>();
+        let mut map = maps.0.get_mut(&current_map.0).unwrap();
 
-        let t = *self.t.borrow();
+        let t = *self.t.read().unwrap();
 
         let (tx, ty) = map.tile_dimensions();
         let x =

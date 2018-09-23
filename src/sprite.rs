@@ -26,6 +26,7 @@ impl<'a> graphics::Drawable for SpriteDrawContext<'a> {
     }
 }
 
+#[derive(Debug)]
 pub struct Sprite {
     pub width: u32,
     pub height: u32,

@@ -84,6 +84,20 @@ impl Map {
         (tile_x as usize, tile_y as usize)
     }
 
+    pub fn get_tile_foot(&self, x: usize, y: usize) -> graphics::Point2 {
+        let tile_dimensions = self.tile_dimensions();
+        let x = self.pos.x + (tile_dimensions.0 as f32 * x as f32) + tile_dimensions.0 as f32 / 2.0;
+        let y = self.pos.y + (tile_dimensions.1 as f32 * y as f32) + tile_dimensions.1 as f32;
+        Point2::new(x, y)
+    }
+
+    pub fn get_tile_top(&self, x: usize, y: usize) -> graphics::Point2 {
+        let tile_dimensions = self.tile_dimensions();
+        let x = self.pos.x + (tile_dimensions.0 as f32 * x as f32) + tile_dimensions.0 as f32 / 2.0;
+        let y = self.pos.y + (tile_dimensions.1 as f32 * y as f32);
+        Point2::new(x, y)
+    }
+
     /// redner helpers
 
     pub fn tile_draw_params(
@@ -115,15 +129,16 @@ impl SpriteComponent for Map {
     fn setup_sprite(&self, sprite: &mut Sprite) {
         // layers are made of 3 sections
         // want the index to point to a given section
-        let layer_index = self.layer_index;
+        let layer_index = self.layer_index * 3;
 
         let (tile_left, tile_top) = self.point_to_tile(self.camera.left(), self.camera.top());
         let (tile_right, tile_bottom) =
             self.point_to_tile(self.camera.right(), self.camera.bottom());
-
         sprite.sprite_batch.clear();
+        let mut count = 0;
         for j in tile_top..=(tile_bottom) {
             for i in tile_left..=(tile_right) {
+                count += 1;
                 // Get actual tile layer
                 let tile = self.get_tile(i, j, layer_index);
                 if tile > 0 {

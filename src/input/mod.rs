@@ -1,6 +1,9 @@
 //! Typedefs for input shortcuts.
+pub mod input;
+
 use ggez::event::*;
-use ggez_goodies::input;
+
+use std::sync::{Arc, RwLock};
 
 #[derive(Debug, Copy, Clone, PartialEq, Eq, Hash)]
 pub enum Button {
@@ -17,6 +20,15 @@ pub enum Axis {
 pub type InputBinding = input::InputBinding<Axis, Button>;
 pub type InputEvent = input::InputEffect<Axis, Button>;
 pub type InputState = input::InputState<Axis, Button>;
+
+#[derive(Clone)]
+pub struct Input(pub InputState);
+
+impl Default for Input {
+    fn default() -> Self {
+        Input(InputState::new())
+    }
+}
 
 /// Create the default keybindings for our input state.
 pub fn create_input_binding() -> input::InputBinding<Axis, Button> {

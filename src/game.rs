@@ -12,6 +12,7 @@ use world::*;
 pub struct Game {
     pub ctx: Rc<RefCell<Context>>,
     pub storyboard: Storyboard,
+    pub input_binding: input::InputBinding,
     events: event::Events,
     pub should_exit: bool,
 }
@@ -24,17 +25,25 @@ impl Game {
     ) -> Self {
         let events = event::Events::new(&ctx).unwrap();
         let world = World::new(&mut ctx, None);
+
         Game {
             ctx: Rc::new(RefCell::new(ctx)),
             storyboard: Storyboard::new(world, stories),
+            input_binding: input::create_input_binding(),
             events: events,
             should_exit: false,
         }
     }
 
     pub fn update(&mut self) {
-        const DESIRED_FPS: u32 = 15;
+        const DESIRED_FPS: u32 = 60;
         while { timer::check_update_time(&mut self.ctx.borrow_mut(), DESIRED_FPS) } {
+            {
+                let state = self.storyboard.ctx.borrow_mut();
+                let mut input = state.world.specs_world.write_resource::<input::Input>();
+                input.0.update(1.0 / DESIRED_FPS as f32);
+            }
+
             self.should_exit = self
                 .storyboard
                 .update_storyboard(1.0 / DESIRED_FPS as f32, Rc::clone(&self.ctx));
@@ -57,6 +66,26 @@ impl Game {
             // Handle events
             for event in self.events.poll() {
                 ctx.process_event(&event);
+                match event {
+                    event::Event::KeyDown {
+                        keycode: Some(keycode),
+                        ..
+                    } => if let Some(ev) = self.input_binding.resolve(keycode) {
+                        let state = self.storyboard.ctx.borrow_mut();
+                        let mut input = state.world.specs_world.write_resource::<input::Input>();
+                        input.0.update_effect(ev, true);
+                        debug!("KeyDown {:?} {:?}", keycode, ev);
+                    },
+                    event::Event::KeyUp {
+                        keycode: Some(keycode),
+                        ..
+                    } => if let Some(ev) = self.input_binding.resolve(keycode) {
+                        let state = self.storyboard.ctx.borrow_mut();
+                        let mut input = state.world.specs_world.write_resource::<input::Input>();
+                        input.0.update_effect(ev, false);
+                    },
+                    _ => {}
+                }
                 match event {
                     event::Event::Quit { .. }
                     | event::Event::KeyDown {

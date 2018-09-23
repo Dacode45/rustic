@@ -5,6 +5,8 @@ extern crate ggez_goodies;
 extern crate specs;
 #[macro_use]
 extern crate specs_derive;
+#[macro_use]
+extern crate lazy_static;
 extern crate tiled;
 extern crate warmy;
 
@@ -16,6 +18,7 @@ extern crate fern;
 
 pub mod application;
 pub mod components;
+pub mod entities;
 pub mod game;
 pub mod input;
 pub mod map;
@@ -24,6 +27,7 @@ pub mod sop;
 pub mod sprite;
 pub mod state;
 pub mod storyboard;
+pub mod systems;
 pub mod tween;
 pub mod util;
 pub mod world;

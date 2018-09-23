@@ -25,9 +25,9 @@ pub enum Trans<T> {
     /// if there are none.
     Pop,
     /// Pause the active state and push a new state onto the stack.
-    Push(Box<State<T>>),
+    Push(Box<State<T> + Sync>),
     /// Remove the current state on the stack and insert a different one.
-    Switch(Box<State<T>>),
+    Switch(Box<State<T> + Sync>),
     /// Stop and remove all states and shut down the engine.
     Quit,
 }
@@ -69,12 +69,12 @@ pub trait State<T> {
 pub struct StateMachine<T> {
     running: bool,
     #[derivative(Debug = "ignore")]
-    pub state_stack: Vec<Box<State<T>>>,
+    pub state_stack: Vec<Box<State<T> + Sync>>,
 }
 
 impl<T> StateMachine<T> {
     /// Creates a new state machine with the given initial state.
-    pub fn new(initial_state: Box<State<T>>) -> StateMachine<T> {
+    pub fn new(initial_state: Box<State<T> + Sync>) -> StateMachine<T> {
         StateMachine {
             running: false,
             state_stack: vec![initial_state],
@@ -113,21 +113,21 @@ impl<T> StateMachine<T> {
         if self.running {
             let mut trans = Trans::None;
             {
-                let mut not_blocking = true;
-                let mut substack: Vec<&mut Box<State<T>>> = self
+                let mut blocking = false;
+                let mut substack: Vec<&mut Box<State<T> + Sync>> = self
                     .state_stack
                     .iter_mut()
                     .rev()
                     .take_while(|state| {
-                        if !not_blocking {
+                        if blocking {
                             return false;
                         }
-                        not_blocking = state.is_blocking();
+                        // debug!("Blocking? {} {}", state.state_name(), state.is_blocking());
+                        blocking = state.is_blocking();
                         true
                     }).collect();
                 if let Some((first, rest)) = substack.split_first_mut() {
                     trans = (&mut *first).update(dt, StateData { data });
-
                     // update everything
                     for state in rest.iter_mut() {
                         state.update(dt, StateData { data });
@@ -173,7 +173,7 @@ impl<T> StateMachine<T> {
     }
 
     /// Removes the current state on the stack and inserts a different one.
-    fn switch(&mut self, state: Box<State<T>>, data: StateData<T>) {
+    fn switch(&mut self, state: Box<State<T> + Sync>, data: StateData<T>) {
         if self.running {
             let StateData { data } = data;
             if let Some(mut state) = self.state_stack.pop() {
@@ -187,7 +187,7 @@ impl<T> StateMachine<T> {
     }
 
     /// Pauses the active state and pushes a new state onto the state stack.
-    fn push(&mut self, next: Box<State<T>>, data: StateData<T>) {
+    fn push(&mut self, next: Box<State<T> + Sync>, data: StateData<T>) {
         println!("pushing");
         if self.running {
             let StateData { data } = data;
@@ -224,7 +224,7 @@ impl<T> StateMachine<T> {
         }
     }
 
-    pub fn current(&self) -> &Box<State<T>> {
+    pub fn current(&self) -> &Box<State<T> + Sync> {
         self.state_stack.last().unwrap()
     }
 

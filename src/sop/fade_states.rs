@@ -1,7 +1,6 @@
 use ggez::graphics::*;
 
-use std::cell::RefCell;
-use std::rc::Rc;
+use std::sync::{Arc, Mutex, RwLock};
 
 use state::*;
 use storyboard::*;
@@ -25,7 +24,7 @@ pub struct FadeStory {
     color: Color,
     alpha_start: f32,
     alpha_end: f32,
-    done: Rc<RefCell<bool>>,
+    done: Arc<RwLock<bool>>,
 }
 
 impl FadeStory {
@@ -35,7 +34,7 @@ impl FadeStory {
             color: color,
             alpha_start: start,
             alpha_end: end,
-            done: Rc::new(RefCell::new(false)),
+            done: Arc::new(RwLock::new(false)),
         }
     }
 }
@@ -47,11 +46,11 @@ impl State<StoryboardContext> for FadeStory {
             self.color,
             self.alpha_start,
             self.alpha_end,
-            Rc::clone(&self.done),
+            self.done.clone(),
         )));
     }
     fn update(&mut self, _dt: f32, _ctx: StateData<StoryboardContext>) -> StoryTrans {
-        if *self.done.borrow() {
+        if *self.done.read().unwrap() {
             return Trans::Pop;
         }
         Trans::None
@@ -68,19 +67,19 @@ pub struct FadeState {
     alpha_start: f32,
     alpha_end: f32,
     started: bool,
-    alpha: Rc<RefCell<f32>>,
-    done: Rc<RefCell<bool>>,
+    alpha: Arc<RwLock<f32>>,
+    done: Arc<RwLock<bool>>,
 }
 
 impl FadeState {
-    pub fn new(seconds: f32, color: Color, start: f32, end: f32, done: Rc<RefCell<bool>>) -> Self {
+    pub fn new(seconds: f32, color: Color, start: f32, end: f32, done: Arc<RwLock<bool>>) -> Self {
         FadeState {
             duration: seconds,
             color: color,
             alpha_start: start,
             alpha_end: end,
             started: false,
-            alpha: Rc::new(RefCell::new(1.0)),
+            alpha: Arc::new(RwLock::new(1.0)),
             done: done,
         }
     }
@@ -88,33 +87,33 @@ impl FadeState {
 
 impl State<StoryboardContext> for FadeState {
     fn state_name(&self) -> String {
-        return format!("FadeState: {}", *self.alpha.borrow()).to_owned();
+        return format!("FadeState: {}", self.duration);
     }
     fn update(&mut self, _dt: f32, _ctx: StateData<StoryboardContext>) -> StoryTrans {
         if !self.started {
             self.started = true;
 
-            let alpha = Rc::clone(&self.alpha);
+            let alpha = self.alpha.clone();
             let tween = Box::new(TweenState {
                 tween: Tween::new(self.alpha_start, self.alpha_end, self.duration),
-                tween_fn: Box::new(ease_in_quad),
-                apply_fn: Box::new(move |value| {
-                    *alpha.borrow_mut() = value;
-                }),
+                tween_fn: TweenFn::EaseInQuad,
+                apply_fn: move |value| {
+                    *alpha.write().unwrap() = value;
+                },
             });
 
             return Trans::Push(tween);
         }
-        let alpha = *self.alpha.borrow();
+        let alpha = *self.alpha.read().unwrap();
         if alpha <= 0.0 || alpha >= 1.0 {
-            *self.done.borrow_mut() = true;
+            *self.done.write().unwrap() = true;
             return Trans::Pop;
         }
         Trans::None
     }
     fn draw(&mut self, ctx: StateData<StoryboardContext>) {
         let mut parts = self.color.to_rgba();
-        let alpha = *self.alpha.borrow();
+        let alpha = *self.alpha.read().unwrap();
         parts.3 = (255.0 * alpha) as u8;
         let color = Color::from(parts);
 

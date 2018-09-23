@@ -63,15 +63,19 @@ impl Storyboard {
         stories: Vec<Story>,
     ) -> Vec<Story> {
         let mut done = false;
-
+        let mut iter = 0;
         stories
             .into_iter()
             .map(|story| {
                 if done {
                     return story;
                 }
+                iter += 1;
                 let next = match story {
-                    Story::Setup(setup) => setup(ctx),
+                    Story::Setup(setup) => {
+                        done = true;
+                        setup(ctx)
+                    }
                     Story::Start(mut start) => {
                         let trans = start.on_start(state::StateData::new(ctx));
                         if let state::Trans::Pop = trans {
@@ -120,7 +124,7 @@ impl Storyboard {
 
         // run storystack
         if !self.storystack.is_running() {
-            println!("not started");
+            info!("Starting Storystack");
             self.storystack.start(state::StateData::new(&mut s_ctx));
         } else {
             self.storystack
@@ -135,9 +139,9 @@ impl Storyboard {
             .iter()
             .map(|story| match story {
                 Story::Setup(_) => "setup state".to_owned(),
-                Story::Start(_s) => "start state".to_owned(),
+                Story::Start(s) => format!("TO START: {}", s.state_name()).to_owned(),
                 Story::Run(s) => s.state_name().to_owned(),
-                Story::Done(name) => format!("Done: {}", name),
+                Story::Done(name) => format!("DONE: {}", name),
             }).collect();
 
         let state_names: Vec<String> = self
