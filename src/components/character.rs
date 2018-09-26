@@ -240,7 +240,7 @@ impl State<Character> for MoveState {
     }
     fn on_start(&mut self, ctx: StateData<Character>) -> Trans<Character> {
         let c = ctx.data;
-        let mut frames = c.anim().map.get(self.facing.name()).unwrap().clone();
+        let frames = c.anim().map.get(self.facing.name()).unwrap().clone();
         c.anim().spf = 1.0 / (frames.len()) as f32;
         c.anim().set_frames(frames);
         c.anim().should_loop = true;
@@ -337,7 +337,7 @@ impl State<Character> for FollowPathState {
 
         Trans::None
     }
-    fn on_stop(&mut self, ctx: StateData<Character>) {
+    fn on_stop(&mut self, _ctx: StateData<Character>) {
         *self.done.write().unwrap() = true;
     }
 }

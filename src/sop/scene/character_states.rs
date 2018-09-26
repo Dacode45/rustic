@@ -35,7 +35,7 @@ pub fn move_character(_name: &str, path: Vec<Facing>) -> Story {
     use specs::Join;
 
     let eid = _name.to_owned();
-    return Story::Setup(Box::new(move |ctx| {
+    return Story::Setup(Box::new(move |_ctx| {
         return Story::Start(Box::new(MoveCharacterState::new(eid.clone(), path.clone())));
     }));
 }
@@ -62,7 +62,7 @@ impl State<StoryboardContext> for MoveCharacterState {
 
         let ctx = ctx.data;
         let state = &mut *ctx.state.borrow_mut();
-        let ctx = &mut *ctx.ctx.borrow_mut();
+        let _ctx = &mut *ctx.ctx.borrow_mut();
         let world = &mut state.world.specs_world;
 
         let id = world.read_storage::<EntityID>();
