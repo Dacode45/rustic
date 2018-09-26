@@ -1,5 +1,5 @@
 use ggez::graphics::*;
-use specs::{Component, VecStorage, World};
+use specs::{Component, VecStorage};
 
 #[derive(Debug, Clone)]
 pub struct EntityID(pub String);

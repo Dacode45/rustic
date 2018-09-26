@@ -1,6 +1,6 @@
 use ggez::graphics::*;
 
-use std::sync::{Arc, Mutex, RwLock};
+use std::sync::{Arc, RwLock};
 
 use state::*;
 use storyboard::*;

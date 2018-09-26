@@ -4,10 +4,8 @@ extern crate tiled;
 
 use ggez::graphics::Rect;
 
-use components::animation::Facing::*;
 use rustic::application::*;
 use rustic::components;
-use rustic::entities::*;
 use rustic::resources::*;
 use rustic::sop::*;
 use rustic::storyboard::*;

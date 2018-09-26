@@ -1,6 +1,5 @@
-use specs::{Component, VecStorage, World};
+use specs::{Component, VecStorage};
 
-use std::cmp;
 use std::collections::HashMap;
 
 #[derive(Clone)]

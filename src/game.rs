@@ -1,4 +1,3 @@
-use ggez::event::*;
 use ggez::*;
 
 use std::cell::RefCell;

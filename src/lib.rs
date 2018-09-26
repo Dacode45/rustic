@@ -2,11 +2,9 @@
 extern crate derivative;
 extern crate ggez;
 extern crate ggez_goodies;
-extern crate specs;
-#[macro_use]
-extern crate specs_derive;
-#[macro_use]
 extern crate lazy_static;
+extern crate specs;
+// extern crate specs_derive;
 extern crate tiled;
 extern crate warmy;
 

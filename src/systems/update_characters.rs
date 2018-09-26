@@ -1,13 +1,11 @@
-use specs;
 use specs::prelude::Resources;
-use specs::{Read, ReadStorage, System, SystemData, Write, WriteStorage};
+use specs::{Read, ReadStorage, System, Write, WriteStorage};
 
 use std::sync::{Arc, RwLock};
 
 use components::*;
 use input::Input;
 use resources::*;
-use state::*;
 
 pub struct UpdateCharacters;
 

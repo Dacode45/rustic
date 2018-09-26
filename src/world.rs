@@ -1,14 +1,10 @@
 use ggez;
-use ggez::graphics::{Point2, Rect, Vector2};
 use specs;
 
 use warmy;
 
-use std::collections::HashMap;
 use std::path;
 
-use components::*;
-use input;
 use resources::*;
 
 pub struct World {

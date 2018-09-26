@@ -3,7 +3,6 @@ use ggez::*;
 use tiled;
 
 use sprite::*;
-use storyboard::*;
 use util;
 
 #[derive(Debug)]
@@ -168,10 +167,8 @@ impl SpriteComponent for Map {
         let (tile_right, tile_bottom) =
             self.point_to_tile(self.camera.right(), self.camera.bottom());
         sprite.sprite_batch.clear();
-        let mut count = 0;
         for j in tile_top..=(tile_bottom) {
             for i in tile_left..=(tile_right) {
-                count += 1;
                 // Get actual tile layer
                 let tile = self.get_tile(i, j, layer_index);
                 if tile > 0 {

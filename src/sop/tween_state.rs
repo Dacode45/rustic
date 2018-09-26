@@ -1,8 +1,5 @@
 use state;
-use storyboard;
 use tween::*;
-
-use std::sync::{Arc, Mutex};
 
 pub struct TweenState<F>
 where

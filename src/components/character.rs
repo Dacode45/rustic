@@ -1,7 +1,6 @@
 use ggez::graphics::*;
 use specs::{Component, VecStorage};
 
-use std::mem::drop;
 use std::sync::{Arc, RwLock};
 
 use components::*;
@@ -9,7 +8,6 @@ use input::{Axis, InputState};
 use map::Map;
 use sop::TweenState;
 use state::*;
-use storyboard::*;
 use tween::*;
 
 #[derive(Debug)]

@@ -1,6 +1,5 @@
 use std::sync::{Arc, RwLock};
 
-use map::*;
 use resources::*;
 use sop::TweenState;
 use state::*;

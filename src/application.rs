@@ -1,7 +1,5 @@
 use ggez::*;
 
-use std::path;
-
 use game::Game;
 use storyboard::*;
 use util;

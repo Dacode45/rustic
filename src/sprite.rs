@@ -1,9 +1,7 @@
 use ggez::{
     self,
-    graphics::{self, spritebatch::SpriteBatch, Image, Point2, Rect},
+    graphics::{self, spritebatch::SpriteBatch, Rect},
 };
-
-use std::collections::HashMap;
 
 use util;
 

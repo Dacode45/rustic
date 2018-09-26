@@ -3,10 +3,9 @@ use ggez::graphics::*;
 use specs;
 
 use std::path;
-use std::sync::{Arc, Mutex, RwLock};
+use std::sync::{Arc, RwLock};
 
 use components::*;
-use input::Input;
 use map::*;
 use resources::*;
 use sprite::*;
@@ -84,6 +83,7 @@ impl State<StoryboardContext> for SceneStory {
 }
 
 struct SceneState {
+    #[allow(dead_code)]
     done: Arc<RwLock<bool>>,
 }
 

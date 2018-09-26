@@ -1,12 +1,9 @@
 use ggez::graphics::*;
-use ggez::Context;
-use specs::{Builder, Component, ReadStorage, RunNow, System, VecStorage, World};
+use specs::{Builder, World};
 
 use std::collections::HashMap;
 
 use components::*;
-use resources::*;
-use sprite::*;
 use state::*;
 
 pub struct CharacterBuilder {

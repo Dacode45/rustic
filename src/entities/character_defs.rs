@@ -1,9 +1,5 @@
-use ggez;
-use specs::World;
-
 use super::character::*;
 use components::*;
-use resources::*;
 
 pub fn new_guard() -> CharacterBuilder {
     // add the resource

@@ -32,8 +32,6 @@ pub fn add_character(gen: fn() -> entities::CharacterBuilder) -> Story {
 }
 
 pub fn move_character(_name: &str, path: Vec<Facing>) -> Story {
-    use specs::Join;
-
     let eid = _name.to_owned();
     return Story::Setup(Box::new(move |_ctx| {
         return Story::Start(Box::new(MoveCharacterState::new(eid.clone(), path.clone())));

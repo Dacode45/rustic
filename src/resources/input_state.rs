@@ -1,4 +1,3 @@
-use ggez::graphics::Rect;
 use specs::World;
 
 use input::Input;

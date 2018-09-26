@@ -3,7 +3,7 @@ pub mod character;
 pub mod common;
 pub mod render;
 
-use specs::{Component, VecStorage, World};
+use specs::World;
 
 pub use self::animation::*;
 pub use self::character::{Character, CharacterController};

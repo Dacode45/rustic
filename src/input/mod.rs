@@ -3,8 +3,6 @@ pub mod input;
 
 use ggez::event::*;
 
-use std::sync::{Arc, RwLock};
-
 #[derive(Debug, Copy, Clone, PartialEq, Eq, Hash)]
 pub enum Button {
     Fire,

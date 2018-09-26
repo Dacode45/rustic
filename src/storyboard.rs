@@ -4,7 +4,6 @@ use std;
 use std::cell::RefCell;
 use std::rc::Rc;
 
-use input;
 use sop;
 use state;
 use world::*;
